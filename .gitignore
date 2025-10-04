@@ -1,3 +1,4 @@
 .serverless
 aws
 awscliv2.zip
+node_modules
