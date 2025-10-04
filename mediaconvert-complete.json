@@ -1,0 +1,23 @@
+
+
+{
+  "__comment__": "For testtt",
+    "version": "0",
+    "id": "abcd1234-efgh5678",
+    "detail-type": "MediaConvert Job State Change",
+    "source": "aws.mediaconvert",
+    "account": "374189381877",
+    "time": "2025-10-04T18:30:00Z",
+    "region": "ap-southeast-2",
+    "resources": [],
+    "detail": {
+      "status": "COMPLETE",
+      "userMetadata": {
+        "originalKey": "uploads/file_example_MP4_640_3MG.mp4",
+        "outPrefix": "processed/file_example_MP4_640_3MG/"
+      }
+    }
+  }
+
+  
+  

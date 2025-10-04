@@ -1,0 +1,11 @@
+{
+  "__comment__": "For testtt",
+  "Records": [
+    {
+      "s3": {
+        "bucket": { "name": "web3-bucket-ry" },
+        "object": { "key": "uploads/file_example_MP4_640_3MG.mp4" }
+      }
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+service: video-transcoder-one-bucket
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-southeast-2
+  architecture: x86_64
+
+  environment:
+    BUCKET: ${ssm:/myapp/bucket}
+    BACKEND_URL: ${ssm:/myapp/backend_url}
+    LAMBDA_SECRET: ${ssm:/myapp/lambda_secret}
+    MEDIACONVERT_ROLE_ARN: ${ssm:/myapp/mediaconvert_role_arn}
+    PLAYLIST_NAME: playlist.m3u8
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:GetObject
+        - s3:ListBucket
+      Resource:
+        - arn:aws:s3:::web3-bucket-ry
+        - arn:aws:s3:::web3-bucket-ry/*
+    - Effect: Allow
+      Action:
+        - mediaconvert:CreateJob
+        - mediaconvert:GetJob
+      Resource: "*"
+    - Effect: Allow
+      Action: iam:PassRole
+      Resource: ${ssm:/myapp/mediaconvert_role_arn}
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "*"
+
+build:
+  esbuild:
+    minify: true
+    exclude:
+      - aws-sdk
+    external:
+      - '@aws-sdk/*'
+
+functions:
+  transcodeOnUpload:
+    handler: handler.transcodeOnUpload
+    events:
+      - s3:
+          existing: true
+          bucket: web3-bucket-ry
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploads/
+            - suffix: .mp4
+
+  onConvertComplete:
+    handler: handler.onConvertComplete
+    events:
+      - eventBridge:
+          pattern:
+            source: [ "aws.mediaconvert" ]
+            detail-type: [ "MediaConvert Job State Change" ]
+            detail:
+              status: [ "COMPLETE" ]

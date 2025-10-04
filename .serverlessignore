@@ -1,0 +1,9 @@
+node_modules/aws-sdk/**
+node_modules/@aws-sdk/*
+node_modules/.cache
+.git/**
+*.log
+*.md
+test/**
+__tests__/**
+.DS_Store
